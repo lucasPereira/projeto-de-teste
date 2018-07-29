@@ -2,11 +2,21 @@ package br.ufsc.setic.modelo.moeda;
 
 public class FabricaDeDinheiro {
 
-	public Dinheiro zero(Moeda moeda) {
-		return construir(moeda, 0, 0);
+	private Moeda moeda;
+
+	public FabricaDeDinheiro(Moeda moeda) {
+		this.moeda = moeda;
 	}
 
-	public Dinheiro construir(Moeda moeda, Integer inteiro, Integer fracao) {
+	public Dinheiro construir() {
+		return construir(0, 0);
+	}
+
+	public Dinheiro construir(Integer inteiro) {
+		return construir(inteiro, 0);
+	}
+
+	public Dinheiro construir(Integer inteiro, Integer fracao) {
 		garantirApenasPositivos(inteiro, fracao);
 		Integer base = moeda.getBase();
 		Integer soma = inteiro * base + fracao;

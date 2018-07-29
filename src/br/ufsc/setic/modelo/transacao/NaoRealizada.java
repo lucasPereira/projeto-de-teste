@@ -1,17 +1,25 @@
 package br.ufsc.setic.modelo.transacao;
 
+import javax.persistence.Entity;
+
 import br.ufsc.setic.modelo.moeda.CalculadoraMonetaria;
 
-public class NaoRealizada implements Transacao {
+@Entity
+public class NaoRealizada extends Transacao {
 
-	private Transacao transacao;
+	private Class<?> tipo;
 
-	public NaoRealizada(Transacao transacao) {
-		this.transacao = transacao;
+	public NaoRealizada() {
+		super();
 	}
 
-	public Transacao getTransacao() {
-		return transacao;
+	public NaoRealizada(Transacao transacao) {
+		super(transacao.getConta());
+		this.tipo = transacao.getClass();
+	}
+
+	public Class<?> getTipo() {
+		return tipo;
 	}
 
 	@Override

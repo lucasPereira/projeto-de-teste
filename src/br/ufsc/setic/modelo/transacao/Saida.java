@@ -1,21 +1,23 @@
 package br.ufsc.setic.modelo.transacao;
 
+import javax.persistence.Entity;
+
 import br.ufsc.setic.modelo.Conta;
 import br.ufsc.setic.modelo.moeda.CalculadoraMonetaria;
 import br.ufsc.setic.modelo.moeda.Dinheiro;
 
-public class Saida implements Transacao {
+@Entity
+public class Saida extends Transacao {
 
-	private Conta conta;
 	private Dinheiro quantia;
 
-	public Saida(Conta conta, Dinheiro quantia) {
-		this.conta = conta;
-		this.quantia = quantia;
+	public Saida() {
+		super();
 	}
 
-	public Conta getConta() {
-		return conta;
+	public Saida(Conta conta, Dinheiro quantia) {
+		super(conta);
+		this.quantia = quantia;
 	}
 
 	public Dinheiro getQuantia() {

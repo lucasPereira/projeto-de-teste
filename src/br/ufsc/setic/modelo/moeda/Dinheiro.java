@@ -1,12 +1,17 @@
 package br.ufsc.setic.modelo.moeda;
 
-public final class Dinheiro {
+import javax.persistence.Embeddable;
+
+@Embeddable
+public class Dinheiro {
 
 	private Moeda moeda;
 	private Integer inteiro;
 	private Integer fracao;
 
-	protected Dinheiro(Moeda moeda, Integer inteiro, Integer fracao) {
+	public Dinheiro() {}
+
+	public Dinheiro(Moeda moeda, Integer inteiro, Integer fracao) {
 		this.moeda = moeda;
 		this.inteiro = inteiro;
 		this.fracao = fracao;

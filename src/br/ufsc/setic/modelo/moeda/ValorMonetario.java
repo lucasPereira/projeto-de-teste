@@ -2,16 +2,16 @@ package br.ufsc.setic.modelo.moeda;
 
 public final class ValorMonetario {
 
-	private Boolean estaPositivo;
+	private Boolean positivo;
 	private Dinheiro quantia;
 
-	protected ValorMonetario(Boolean estaPositivo, Dinheiro quantia) {
-		this.estaPositivo = estaPositivo;
+	public ValorMonetario(Boolean positivo, Dinheiro quantia) {
+		this.positivo = positivo;
 		this.quantia = quantia;
 	}
 
-	public Boolean getEstaPositivo() {
-		return estaPositivo;
+	public Boolean getPositivo() {
+		return positivo;
 	}
 
 	public Dinheiro getQuantia() {
@@ -22,7 +22,7 @@ public final class ValorMonetario {
 	public boolean equals(Object objeto) {
 		if (objeto instanceof ValorMonetario) {
 			ValorMonetario outro = (ValorMonetario) objeto;
-			Boolean mesmoSinal = estaPositivo.equals(outro.estaPositivo);
+			Boolean mesmoSinal = positivo.equals(outro.positivo);
 			Boolean mesmaQuantia = quantia.equals(outro.quantia);
 			return mesmoSinal && mesmaQuantia;
 		}
@@ -31,7 +31,7 @@ public final class ValorMonetario {
 
 	@Override
 	public String toString() {
-		return String.format("(%s) %s", estaPositivo ? "+" : "-", quantia);
+		return String.format("(%s) %s", positivo ? "+" : "-", quantia);
 	}
 
 }
