@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TesteExemplo {
 
 	@Test
-	void testar() throws Exception {
+	public void testar() throws Exception {
 		assertEquals("Teste", "Teste");
 	}
 
