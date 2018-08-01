@@ -12,7 +12,6 @@ import br.ufsc.setic.modelo.Conta;
 import br.ufsc.setic.modelo.moeda.CalculadoraMonetaria;
 import br.ufsc.setic.modelo.moeda.ConversorDeMoedaUmParaUm;
 import br.ufsc.setic.modelo.moeda.Dinheiro;
-import br.ufsc.setic.modelo.moeda.FabricaDeDinheiro;
 import br.ufsc.setic.modelo.moeda.Moeda;
 import br.ufsc.setic.modelo.moeda.ValorMonetario;
 import br.ufsc.setic.modelo.transacao.Entrada;
@@ -24,18 +23,15 @@ import br.ufsc.setic.modelo.transacao.Transacao;
 
 public class SistemaBancario {
 
-	private FabricaDeDinheiro fabricaDeDinheiro;
 	private ConversorDeMoedaUmParaUm conversorDeMoeda;
 	private EntityManagerFactory fabricaDeGerenciadorDeEntidade;
 
 	public SistemaBancario() {
-		fabricaDeDinheiro = new FabricaDeDinheiro(Moeda.BRL);
 		conversorDeMoeda = new ConversorDeMoedaUmParaUm();
 		fabricaDeGerenciadorDeEntidade = Persistence.createEntityManagerFactory("teste");
 	}
 
-	public Banco criarBanco(String nome, Moeda moeda) {
-		Dinheiro taxaDeTransacao = fabricaDeDinheiro.construir();
+	public Banco criarBanco(String nome, Moeda moeda, Dinheiro taxaDeTransacao) {
 		return new Banco(nome, moeda, taxaDeTransacao);
 	}
 
@@ -162,7 +158,9 @@ public class SistemaBancario {
 	}
 
 	public Operacao transferir(Conta origem, Conta destino, Dinheiro quantia) {
+		Dinheiro taxa = origem.getAgencia().getBanco().getTaxaDeTransacao();
 		Transacao saida = new Saida(origem, quantia);
+		Transacao saidaTaxa = new Saida(origem, taxa);
 		Transacao entrada = new Entrada(destino, quantia);
 		EstadosDeOperacao estado = EstadosDeOperacao.SUCESSO;
 		CalculadoraMonetaria saldoOrigem = new CalculadoraMonetaria(quantia.getMoeda(), conversorDeMoeda);
@@ -171,7 +169,7 @@ public class SistemaBancario {
 			transacao.contabilizar(saldoOrigem);
 		}
 		Boolean saldoJaEstaNegativo = !saldoOrigem.calcular().getPositivo();
-		Boolean saldoFicaraNegativo = !saldoOrigem.subtrair(quantia).calcular().getPositivo();
+		Boolean saldoFicaraNegativo = !saldoOrigem.subtrair(quantia).subtrair(taxa).calcular().getPositivo();
 		if (saldoJaEstaNegativo || saldoFicaraNegativo) {
 			saida = new NaoRealizada(saida);
 			entrada = new NaoRealizada(entrada);
@@ -186,6 +184,7 @@ public class SistemaBancario {
 		}
 		cadastrarTransacao(entrada);
 		cadastrarTransacao(saida);
+		cadastrarTransacao(saidaTaxa);
 		return new Operacao(estado, saida, entrada);
 	}
 
