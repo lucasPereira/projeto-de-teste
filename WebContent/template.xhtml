@@ -8,12 +8,9 @@
 </h:head>
 
 <h:body>
-	<ui:include src="/componentes/cabecalho.xhtml"></ui:include>
-	<ui:include src="/componentes/navegacao.xhtml"></ui:include>
-	<p:panel>
-		<ui:insert name="pagina"></ui:insert>
-	</p:panel>
-	<ui:include src="/componentes/rodape.xhtml"></ui:include>
+	<ui:include src="/componentes/cabecalho.xhtml" />
+	<ui:insert name="pagina" />
+	<ui:include src="/componentes/rodape.xhtml" />
 </h:body>
 
 </html>

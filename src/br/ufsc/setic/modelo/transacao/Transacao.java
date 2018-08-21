@@ -34,6 +34,10 @@ public abstract class Transacao {
 		return conta;
 	}
 
+	public void setIdentificador(Integer identificador) {
+		this.identificador = identificador;
+	}
+
 	public abstract void contabilizar(CalculadoraMonetaria calculadora);
 
 	@Override

@@ -24,11 +24,16 @@ import br.ufsc.setic.modelo.transacao.Transacao;
 public class SistemaBancario {
 
 	private ConversorDeMoedaUmParaUm conversorDeMoeda;
+
 	private EntityManagerFactory fabricaDeGerenciadorDeEntidade;
 
 	public SistemaBancario() {
+		this("teste");
+	}
+
+	private SistemaBancario(String unidadeDePersistencia) {
 		conversorDeMoeda = new ConversorDeMoedaUmParaUm();
-		fabricaDeGerenciadorDeEntidade = Persistence.createEntityManagerFactory("teste");
+		fabricaDeGerenciadorDeEntidade = Persistence.createEntityManagerFactory(unidadeDePersistencia);
 	}
 
 	public Banco criarBanco(String nome, Moeda moeda, Dinheiro taxaDeTransacao) {
@@ -44,70 +49,86 @@ public class SistemaBancario {
 	}
 
 	public void cadastrarBanco(Banco banco) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
+		banco.setIdentificador(null);
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		gerenciadorDeEntidade.persist(banco);
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
-	}
-
-	public void removerBanco(Banco banco) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
-		gerenciadorDeEntidade.remove(banco);
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
-	}
-
-	public List<Banco> listarBancos() {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		List<Banco> bancos = gerenciadorDeEntidade.createQuery("SELECT banco FROM Banco banco ORDER BY banco.nome", Banco.class).getResultList();
-		gerenciadorDeEntidade.close();
-		return bancos;
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
 	}
 
 	public void cadastrarAgencia(Agencia agencia) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
+		agencia.setIdentificador(null);
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		gerenciadorDeEntidade.persist(agencia);
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
-	}
-
-	public List<Agencia> listarAgencias() {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		List<Agencia> agencias = gerenciadorDeEntidade.createQuery("SELECT agencia FROM Agencia agencia ORDER BY agencia.nome, agencia.banco.nome", Agencia.class).getResultList();
-		gerenciadorDeEntidade.close();
-		return agencias;
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
 	}
 
 	public void cadastrarConta(Conta conta) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
+		conta.setIdentificador(null);
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		gerenciadorDeEntidade.persist(conta);
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
-	}
-
-	public List<Conta> listarContas() {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		List<Conta> contas = gerenciadorDeEntidade.createQuery("SELECT conta FROM Conta conta ORDER BY conta.titular, conta.agencia.nome, conta.agencia.banco.nome", Conta.class).getResultList();
-		gerenciadorDeEntidade.close();
-		return contas;
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
 	}
 
 	public void cadastrarTransacao(Transacao transacao) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
+		transacao.setIdentificador(null);
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		gerenciadorDeEntidade.persist(transacao);
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+	}
+
+	public void removerBanco(Banco banco) {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		Banco gerenciado = gerenciadorDeEntidade.merge(banco);
+		gerenciadorDeEntidade.remove(gerenciado);
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+	}
+
+	public void removerAgencia(Agencia agencia) {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		Agencia gerenciado = gerenciadorDeEntidade.merge(agencia);
+		gerenciadorDeEntidade.remove(gerenciado);
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+	}
+
+	public void removerConta(Conta conta) {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		Conta gerenciado = gerenciadorDeEntidade.merge(conta);
+		gerenciadorDeEntidade.remove(gerenciado);
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+	}
+
+	public List<Banco> listarBancos() {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		List<Banco> bancos = gerenciadorDeEntidade.createQuery("SELECT banco FROM Banco banco ORDER BY banco.nome", Banco.class).getResultList();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+		return bancos;
+	}
+
+	public List<Agencia> listarAgencias() {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		List<Agencia> agencias = gerenciadorDeEntidade.createQuery("SELECT agencia FROM Agencia agencia ORDER BY agencia.nome, agencia.banco.nome", Agencia.class).getResultList();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+		return agencias;
+	}
+
+	public List<Agencia> listarAgencias(Banco banco) {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		List<Agencia> agencias = gerenciadorDeEntidade.createQuery("SELECT agencia FROM Agencia agencia WHERE agencia.banco = :banco ORDER BY agencia.nome, agencia.banco.nome", Agencia.class).setParameter("banco", banco).getResultList();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+		return agencias;
+	}
+
+	public List<Conta> listarContas() {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		List<Conta> contas = gerenciadorDeEntidade.createQuery("SELECT conta FROM Conta conta ORDER BY conta.titular, conta.agencia.nome, conta.agencia.banco.nome", Conta.class).getResultList();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+		return contas;
 	}
 
 	public List<Transacao> listarTransacoes(Conta conta) {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		List<Transacao> transacoes = gerenciadorDeEntidade.createQuery("SELECT transacao FROM Transacao transacao WHERE transacao.conta = :conta", Transacao.class).setParameter("conta", conta).getResultList();
-		gerenciadorDeEntidade.close();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
 		return transacoes;
 	}
 
@@ -189,8 +210,7 @@ public class SistemaBancario {
 	}
 
 	public void limparBancoDeDados() {
-		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
-		gerenciadorDeEntidade.getTransaction().begin();
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
 		gerenciadorDeEntidade.createQuery("DELETE FROM Transacao").executeUpdate();
 		gerenciadorDeEntidade.createQuery("DELETE FROM Entrada").executeUpdate();
 		gerenciadorDeEntidade.createQuery("DELETE FROM Saida").executeUpdate();
@@ -198,14 +218,23 @@ public class SistemaBancario {
 		gerenciadorDeEntidade.createQuery("DELETE FROM Conta").executeUpdate();
 		gerenciadorDeEntidade.createQuery("DELETE FROM Agencia").executeUpdate();
 		gerenciadorDeEntidade.createQuery("DELETE FROM Banco").executeUpdate();
-		gerenciadorDeEntidade.getTransaction().commit();
-		gerenciadorDeEntidade.close();
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
 	}
 
-	public void remover(Object entidade) {
+	public <T> T obterPeloIdentificador(Class<T> classe, Integer identificador) {
+		EntityManager gerenciadorDeEntidade = iniciarGerenciadorDeEntidades();
+		T entidade = gerenciadorDeEntidade.find(classe, identificador);
+		finalizarGerenciadorDeEntidades(gerenciadorDeEntidade);
+		return entidade;
+	}
+
+	private EntityManager iniciarGerenciadorDeEntidades() {
 		EntityManager gerenciadorDeEntidade = fabricaDeGerenciadorDeEntidade.createEntityManager();
 		gerenciadorDeEntidade.getTransaction().begin();
-		gerenciadorDeEntidade.remove(entidade);
+		return gerenciadorDeEntidade;
+	}
+
+	private void finalizarGerenciadorDeEntidades(EntityManager gerenciadorDeEntidade) {
 		gerenciadorDeEntidade.getTransaction().commit();
 		gerenciadorDeEntidade.close();
 	}

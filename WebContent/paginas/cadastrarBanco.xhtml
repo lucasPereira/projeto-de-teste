@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<h:form id="cadastrarBanco">
+		<p:panelGrid columns="2" class="ui-noborder">
+			<p:outputLabel id="rotuloNome" value="Nome" for="nome" />
+			<p:inputText id="nome" value="#{beanCadastrarBanco.banco.nome}" required="true" />
+
+			<p:outputLabel id="rotuloMoeda" value="Moeda" for="moeda" />
+			<p:selectOneButton id="moeda" value="#{beanCadastrarBanco.banco.moeda}" required="true">
+				<f:selectItems value="#{beanCadastrarBanco.moedas}" />
+			</p:selectOneButton>
+
+			<p:outputLabel id="rotuloTaxaDeTransacao" value="Taxa de Transação" for="taxaDeTransacao" />
+			<p:inputNumber id="taxaDeTransacao" value="#{beanCadastrarBanco.taxaDeTransacao}" decimalPlaces="2" padControl="true" decimalSeparator="," thousandSeparator="." required="true" />
+
+			<p:commandButton id="botaoCadastrar" value="Cadastrar" actionListener="#{beanCadastrarBanco.cadastrar()}" update=":conteudo" />
+		</p:panelGrid>
+	</h:form>
+</ui:composition>

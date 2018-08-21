@@ -1,0 +1,13 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<p:dataTable id="listarAgencias" var="agencia" value="#{beanListarAgencias.agencias}" emptyMessage="Nenhuma agência cadastrada">
+		<p:column id="rotuloIdentificador" headerText="Identificador">
+			<h:outputText id="identificador" value="#{agencia.identificador}" />
+		</p:column>
+		<p:column id="rotuloBanco" headerText="Banco">
+			<h:outputText id="banco" value="#{agencia.banco.nome}" />
+		</p:column>
+		<p:column id="rotuloNome" headerText="Nome">
+			<h:outputText id="nome" value="#{agencia.nome}" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>

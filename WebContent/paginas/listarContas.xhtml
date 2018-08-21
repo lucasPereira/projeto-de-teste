@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<p:dataTable id="listarContas" var="conta" value="#{beanListarContas.contas}" emptyMessage="Nenhuma conta cadastrada">
+		<p:column id="rotuloIdentificador" headerText="Identificador">
+			<h:outputText id="identificador" value="#{conta.identificador}" />
+		</p:column>
+		<p:column id="rotuloBanco" headerText="Banco">
+			<h:outputText id="banco" value="#{conta.agencia.banco.nome}" />
+		</p:column>
+		<p:column id="rotuloAgencia" headerText="Agência">
+			<h:outputText id="agencia" value="#{conta.agencia.nome}" />
+		</p:column>
+		<p:column id="rotuloTitular" headerText="Titular">
+			<h:outputText id="titular" value="#{conta.titular}" />
+		</p:column>
+		<p:column id="rotuloRemover" headerText="Remover">
+			<p:commandButton icon="fa fa-remove" actionListener="#{beanListarContas.remover(conta)}" update="listarContas" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>

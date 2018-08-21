@@ -1,5 +1,6 @@
 package br.ufsc.setic.modelo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -16,7 +17,9 @@ import br.ufsc.setic.modelo.moeda.Moeda;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "nome" }) })
-public class Banco {
+public class Banco implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,6 +58,18 @@ public class Banco {
 
 	public void setIdentificador(Integer identificador) {
 		this.identificador = identificador;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setMoeda(Moeda moeda) {
+		this.moeda = moeda;
+	}
+
+	public void setTaxaDeTransacao(Dinheiro taxaDeTransacao) {
+		this.taxaDeTransacao = taxaDeTransacao;
 	}
 
 	@Override

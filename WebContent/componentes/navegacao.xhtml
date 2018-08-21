@@ -1,17 +1,20 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
-	<p:menubar>
-		<p:menuitem value="Início" url="/" icon="ui-icon-home"></p:menuitem>
-		<p:submenu label="Bancos">
-			<p:menuitem value="Listar" url="/paginas/construcao.xhtml"></p:menuitem>
-			<p:menuitem value="Cadastrar" url="/paginas/construcao.xhtml"></p:menuitem>
-		</p:submenu>
-		<p:submenu label="Agências">
-			<p:menuitem value="Listar" url="/paginas/construcao.xhtml"></p:menuitem>
-			<p:menuitem value="Cadastrar" url="/paginas/construcao.xhtml"></p:menuitem>
-		</p:submenu>
-		<p:submenu label="Contas">
-			<p:menuitem value="Listar" url="/paginas/construcao.xhtml"></p:menuitem>
-			<p:menuitem value="Cadastrar" url="/paginas/construcao.xhtml"></p:menuitem>
-		</p:submenu>
-	</p:menubar>
+	<h:form id="navegacao">
+		<p:menubar>
+			<p:menuitem id="inicio" value="Início" actionListener="#{beanNavegacao.irParaInicio}" update=":conteudo" />
+			<p:submenu id="bancos" label="Bancos">
+				<p:menuitem id="listarBancos" value="Listar" actionListener="#{beanNavegacao.irParaListarBancos()}" update=":conteudo" />
+				<p:menuitem id="cadastrarBanco" value="Cadastrar" actionListener="#{beanNavegacao.irParaCadastrarBanco()}" update=":conteudo" />
+			</p:submenu>
+			<p:submenu id="agencias" label="Agências">
+				<p:menuitem id="listarAgencias" value="Listar" actionListener="#{beanNavegacao.irParaListarAgencias()}" update=":conteudo" />
+				<p:menuitem id="cadastrarAgencia" value="Cadastrar" actionListener="#{beanNavegacao.irParaCadastrarAgencia()}" update=":conteudo" />
+			</p:submenu>
+			<p:submenu id="contas" label="Contas">
+				<p:menuitem id="listarContas" value="Listar" actionListener="#{beanNavegacao.irParaListarContas()}" update=":conteudo" />
+				<p:menuitem id="cadastrarContas" value="Cadastrar" actionListener="#{beanNavegacao.irParaCadastrarConta()}" update=":conteudo" />
+			</p:submenu>
+			<p:menuitem id="limpar" value="Limpar" actionListener="#{beanSistemaBancario.sistemaBancario.limparBancoDeDados()}" update=":conteudo" />
+		</p:menubar>
+	</h:form>
 </ui:composition>

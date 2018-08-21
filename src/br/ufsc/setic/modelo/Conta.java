@@ -1,5 +1,6 @@
 package br.ufsc.setic.modelo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -9,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Conta {
+public class Conta implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,6 +44,18 @@ public class Conta {
 
 	public Agencia getAgencia() {
 		return agencia;
+	}
+
+	public void setIdentificador(Integer identificador) {
+		this.identificador = identificador;
+	}
+
+	public void setTitular(String titular) {
+		this.titular = titular;
+	}
+
+	public void setAgencia(Agencia agencia) {
+		this.agencia = agencia;
 	}
 
 	@Override

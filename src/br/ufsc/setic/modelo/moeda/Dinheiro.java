@@ -42,7 +42,7 @@ public class Dinheiro {
 
 	@Override
 	public String toString() {
-		return String.format("%s %d,%02d", moeda, inteiro, fracao);
+		return String.format("%s %d,%02d", moeda.getSimbolo(), inteiro, fracao);
 	}
 
 }

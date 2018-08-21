@@ -1,0 +1,16 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<p:dataTable id="listarBancos" var="banco" value="#{beanListarBancos.bancos}" emptyMessage="Nenhum banco cadastrado">
+		<p:column id="rotuloIdentificador" headerText="Identificador">
+			<h:outputText id="identificador" value="#{banco.identificador}" />
+		</p:column>
+		<p:column id="rotuloNome" headerText="Nome">
+			<h:outputText id="nome" value="#{banco.nome}" />
+		</p:column>
+		<p:column id="rotuloMoeda" headerText="Moeda">
+			<h:outputText id="moeda" value="#{banco.moeda}" />
+		</p:column>
+		<p:column id="rotuloTaxaDeTransacao" headerText="Taxa de transação">
+			<h:outputText id="taxaDeTransacao" value="#{banco.taxaDeTransacao.toString()}" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>

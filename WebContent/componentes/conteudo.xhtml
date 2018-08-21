@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<p:ajaxStatus style="height: 10px;">
+		<f:facet name="default">
+		</f:facet>
+		<f:facet name="start">
+			<p:progressBar id="barraDeProgresso" mode="indeterminate" style="height: 10px;" />
+		</f:facet>
+		<f:facet name="complete">
+		</f:facet>
+	</p:ajaxStatus>
+	<p:panel id="conteudo">
+		<p:growl id="mensageiro" showDetail="false" sticky="true" />
+		<ui:include src="#{beanNavegacao.pagina}" />
+	</p:panel>
+</ui:composition>

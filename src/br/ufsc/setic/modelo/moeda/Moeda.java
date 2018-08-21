@@ -20,9 +20,4 @@ public enum Moeda {
 		return base;
 	}
 
-	@Override
-	public String toString() {
-		return simbolo;
-	}
-
 }

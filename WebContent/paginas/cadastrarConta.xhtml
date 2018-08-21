@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui">
+	<h:form id="cadastrarConta">
+		<p:panelGrid columns="2" class="ui-noborder">
+			<p:outputLabel id="rotuloBanco" value="Banco" for="banco" />
+			<p:selectOneMenu id="banco" value="#{beanCadastrarConta.banco}" converter="#{conversorBanco}" required="true">
+				<f:selectItem />
+				<f:selectItems value="#{beanCadastrarConta.bancos}" var="banco" itemLabel="#{banco.nome}" />
+				<p:ajax event="change" update="agencia" />
+			</p:selectOneMenu>
+
+			<p:outputLabel id="rotuloAgencia" value="Agência" for="agencia" />
+			<p:selectOneMenu id="agencia" value="#{beanCadastrarConta.agencia}" converter="#{conversorAgencia}" required="true" disabled="#{beanCadastrarConta.banco == null}">
+				<f:selectItem />
+				<f:selectItems value="#{beanCadastrarConta.agencias}" var="agencia" itemLabel="#{agencia.nome}" />
+			</p:selectOneMenu>
+
+			<p:outputLabel id="rotuloTitular" value="Titular" for="titular" />
+			<p:inputText id="titular" value="#{beanCadastrarConta.conta.titular}" required="true" />
+
+			<p:commandButton id="botaoCadastrar" value="Cadastrar" actionListener="#{beanCadastrarConta.cadastrar()}" update=":conteudo" />
+		</p:panelGrid>
+	</h:form>
+</ui:composition>

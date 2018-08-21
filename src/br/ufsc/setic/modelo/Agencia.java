@@ -1,5 +1,6 @@
 package br.ufsc.setic.modelo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -12,7 +13,9 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "nome", "banco_identificador" }) })
-public class Agencia {
+public class Agencia implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +47,18 @@ public class Agencia {
 
 	public Banco getBanco() {
 		return banco;
+	}
+
+	public void setIdentificador(Integer identificador) {
+		this.identificador = identificador;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setBanco(Banco banco) {
+		this.banco = banco;
 	}
 
 	@Override
