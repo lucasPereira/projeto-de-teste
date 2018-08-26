@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<project name="projeto-de-teste" xmlns:jacoco="antlib:org.jacoco.ant">
+	<target name="compilar">
+		<delete dir="construcao" />
+		<mkdir dir="construcao" />
+		<javac destdir="construcao" compiler="javac1.8" source="1.8" target="1.8" includeantruntime="false" debug="true">
+			<src path="src" />
+			<classpath>
+				<fileset dir="WebContent/WEB-INF/lib" includes="*.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="empacotar" depends="compilar">
+		<delete dir="distribuicao" />
+		<mkdir dir="distribuicao" />
+		<jar basedir="construcao" destfile="distribuicao/sistemaBancario.jar">
+			<fileset dir="src" excludes="**/*.java" />
+		</jar>
+	</target>
+
+	<target name="compilar-testes" depends="empacotar">
+		<delete dir="construcao" />
+		<mkdir dir="construcao" />
+		<javac destdir="construcao" compiler="javac1.8" source="1.8" target="1.8" includeantruntime="false" debug="true">
+			<src path="test" />
+			<classpath>
+				<fileset file="distribuicao/sistemaBancario.jar" />
+				<fileset dir="WebContent/WEB-INF/lib" includes="*.jar" />
+				<fileset dir="WebContent/WEB-INF/lib/teste" includes="*.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="empacotar-testes" depends="compilar-testes">
+		<jar basedir="construcao" destfile="distribuicao/testesSistemaBancario.jar" />
+	</target>
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="WebContent/WEB-INF/lib/teste/jacocoant.jar" />
+	</taskdef>
+
+	<target name="testar" depends="empacotar-testes">
+		<delete dir="relatorios" />
+		<mkdir dir="relatorios" />
+		<jacoco:coverage destfile="relatorios/jacoco.exec">
+			<junit haltonerror="true" haltonfailure="true" printsummary="true" logfailedtests="true" fork="true" forkmode="once">
+				<classpath>
+					<path>
+						<fileset file="distribuicao/sistemaBancario.jar" />
+						<fileset file="distribuicao/testesSistemaBancario.jar" />
+						<fileset dir="WebContent/WEB-INF/lib" includes="*.jar" />
+						<fileset dir="WebContent/WEB-INF/lib/teste" includes="*.jar" />
+					</path>
+				</classpath>
+				<batchtest todir="relatorios">
+					<formatter type="plain" />
+					<fileset dir="test" includes="**/*.java" />
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+	</target>
+
+	<target name="checar-cobertura" depends="testar">
+		<jacoco:report>
+			<executiondata>
+				<file file="relatorios/jacoco.exec" />
+			</executiondata>
+			<structure name="Sistema Bancário">
+				<classfiles>
+					<fileset file="distribuicao/sistemaBancario.jar" />
+				</classfiles>
+				<sourcefiles>
+					<fileset dir="src" includes="**/*.java" />
+				</sourcefiles>
+			</structure>
+			<html destdir="relatorios" />
+			<csv destfile="relatorios/jacoco.csv" />
+			<check failonviolation="true">
+				<rule element="BUNDLE">
+					<limit counter="INSTRUCTION" value="COVEREDRATIO" minimum="50%" />
+				</rule>
+			</check>
+		</jacoco:report>
+	</target>
+</project>

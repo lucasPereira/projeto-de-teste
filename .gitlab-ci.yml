@@ -1,0 +1,24 @@
+before_script:
+  - apk add openjdk8
+  - apk add apache-ant
+  
+stages:
+  - construcao
+  - teste
+  - checagem
+  
+construcao:
+  stage: construcao
+  script:
+    - ant -f construcao.xml compilar
+
+test:
+  stage: teste
+  script:
+    - ant -f construcao.xml testar
+
+cobertura:
+  stage: checagem
+  script:
+    - ant -f construcao.xml checar-cobertura
+    - cat relatorios/index.html
