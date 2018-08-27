@@ -12,7 +12,7 @@ construcao:
   script:
     - ant -f construcao.xml compilar
 
-test:
+teste:
   stage: teste
   script:
     - ant -f construcao.xml testar
